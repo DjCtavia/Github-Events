@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"djctavia/server"
+	"fmt"
+)
 
 func main() {
 	fmt.Println("GithubEvents Started.")
+	server.RunServer()
 }
