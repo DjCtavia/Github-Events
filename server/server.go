@@ -16,4 +16,13 @@ func RunServer() {
 
 func DataHandler(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(res, "Hello Github! Welcome on \"%s\" path!", req.URL.Path[1:])
+	if !IsRequestPostMethod(req) {
+		return
+	}
+	fmt.Fprintf(res, "\nYou're using the POST method!")
+
+}
+
+func IsRequestPostMethod(req *http.Request) bool {
+	return req.Method == http.MethodPost
 }
