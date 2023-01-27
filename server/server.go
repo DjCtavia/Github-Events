@@ -6,12 +6,20 @@ import (
 	"net/http"
 )
 
-const ServerPort = 8080
+const DefaultServerPort = 8080
 
-func RunServer() {
-	fmt.Printf("Server is Running on port %d.\n", ServerPort)
+type Server struct {
+	Port int
+}
+
+func (serv Server) SetPort(port int) {
+	serv.Port = port
+}
+
+func (serv Server) RunServer() {
+	fmt.Printf("Server is Running on Port %d.\n", serv.Port)
 	http.HandleFunc("/data", DataHandler)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", ServerPort), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serv.Port), nil))
 }
 
 func DataHandler(res http.ResponseWriter, req *http.Request) {
