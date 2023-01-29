@@ -23,14 +23,21 @@ func (serv Server) RunServer() {
 }
 
 func DataHandler(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(res, "Hello Github! Welcome on \"%s\" path!", req.URL.Path[1:])
-	if !IsRequestPostMethod(req) {
+	if isNotRequestPostMethod(req) {
+		fmt.Fprintf(res, "Bad method")
 		return
 	}
-	fmt.Fprintf(res, "\nYou're using the POST method!")
-
+	_, err := res.Write([]byte{})
+	if err != nil {
+		log.Fatalf("Error when writing bytes: %v", err)
+	}
+	fmt.Fprintf(res, "Good method")
 }
 
 func IsRequestPostMethod(req *http.Request) bool {
 	return req.Method == http.MethodPost
+}
+
+func isNotRequestPostMethod(req *http.Request) bool {
+	return !IsRequestPostMethod(req)
 }
