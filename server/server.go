@@ -27,6 +27,17 @@ func DataHandler(res http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(res, "Bad method")
 		return
 	}
+	if req == nil {
+		fmt.Fprintf(res, "Req is empty")
+	}
+	headerHandler := GithubHeader{}
+	headerHandler.Init(req)
+
+	if headerHandler.IsValidHeader() == false {
+		fmt.Fprintf(res, "Bad headers")
+		return
+	}
+
 	_, err := res.Write([]byte{})
 	if err != nil {
 		log.Fatalf("Error when writing bytes: %v", err)
