@@ -1,52 +1,32 @@
 package server
 
 import (
-	"bytes"
-	"fmt"
 	"io"
 	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
-const (
-	HTTPLOCALHOST = "http://localhost"
-	EXPECTEDGOT   = `Expected: "%s" | Got: "%s"`
-	ERROR         = `Error: %v`
-	GOODMETHOD    = `Good method`
-	BADMETHOD     = `Bad method`
-)
-
 // Server must be run aside for testing otherwise will fail
-func TestRunServer(t *testing.T) {
-	testPostMethod(t)
-}
-
-func testPostMethod(t *testing.T) {
-	client := &http.Client{}
-	jsonBody := []byte(`{}`)
-	bodyReader := bytes.NewReader(jsonBody)
-	url := fmt.Sprintf("%s:%d/data", HTTPLOCALHOST, DefaultServerPort)
-	req, _ := http.NewRequest(http.MethodPost, url, bodyReader)
-
-	resp, errResp := client.Do(req)
-	if errResp != nil {
-		t.Fatalf(ERROR, errResp)
+func TestDataHandler(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(DataHandler))
+	resp, err := http.Post(server.URL, "application/json", strings.NewReader("{}"))
+	if err != nil {
+		t.Error(err)
 	}
-	defer req.Body.Close()
-	bodyByte, err := io.ReadAll(resp.Body)
 
-	if errResp != nil {
-		t.Fatalf(ERROR, err)
-	}
 	if resp.StatusCode != http.StatusOK {
-		t.Fatalf(EXPECTEDGOT, getStatusString(http.StatusOK), getStatusString(resp.StatusCode))
+		t.Errorf("Expected %d status, got %d", http.StatusOK, resp.StatusCode)
 	}
-	if string(bodyByte) != GOODMETHOD {
-		t.Fatalf(EXPECTEDGOT, GOODMETHOD, bodyByte)
-	}
-	t.Logf(EXPECTEDGOT, GOODMETHOD, bodyByte)
-}
+	defer resp.Body.Close()
 
-func getStatusString(statusCode int) string {
-	return fmt.Sprintf("status %d", statusCode)
+	expectedBody := "Good method"
+	byteBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	if string(byteBody) != expectedBody {
+		t.Errorf(`Expected "%s" body, got "%s`, expectedBody, string(byteBody))
+	}
 }
