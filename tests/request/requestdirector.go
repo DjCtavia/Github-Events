@@ -7,19 +7,19 @@ type RequestBuilder interface {
 }
 
 type RequestDirector struct {
-	requestBuilder *RequestBuilder
+	RequestBuilder RequestBuilder
 	request        *http.Request
 }
 
-func (requestDirector *RequestDirector) ChangeBuilder(newRequestBuilder *RequestBuilder) {
-	requestDirector.requestBuilder = newRequestBuilder
+func (requestDirector *RequestDirector) ChangeBuilder(newRequestBuilder RequestBuilder) {
+	requestDirector.RequestBuilder = newRequestBuilder
 }
 
 func (requestDirector *RequestDirector) MakeRequest() *http.Request {
-	if requestDirector.request == nil {
+	if requestDirector.RequestBuilder == nil {
 		return nil
 	}
-	requestDirector.request = requestDirector.MakeRequest()
+	requestDirector.request = requestDirector.RequestBuilder.MakeRequest()
 	return requestDirector.request
 }
 
