@@ -26,42 +26,62 @@ const (
 	WATCH                    = "watch"
 )
 
+const (
+	COMMITCOMMENT_BEAUTIFY            = "Commit comment"
+	CREATE_BEAUTIFY                   = "Create"
+	DELETE_BEAUTIFY                   = "Delete"
+	FORK_BEAUTIFY                     = "Fork"
+	GOLLUM_BEAUTIFY                   = "Gollum"
+	ISSUECOMMENT_BEAUTIFY             = "Issue comment"
+	ISSUES_BEAUTIFY                   = "Issues"
+	MEMBER_BEAUTIFY                   = "Member"
+	PUBLIC_BEAUTIFY                   = "Public"
+	PULLREQUEST_BEAUTIFY              = "Pull request"
+	PULLREQUESTREVIEW_BEAUTIFY        = "Pull request review"
+	PULLREQUESTREVIEWCOMMENT_BEAUTIFY = "Pull request review comment"
+	PULLREQUESTREVIEWTHREAD_BEAUTIFY  = "Pull request review thread"
+	PUSH_BEAUTIFY                     = "Push"
+	RELEASE_BEAUTIFY                  = "Release"
+	SPONSORSHIP_BEAUTIFY              = "Sponsorship"
+	WATCH_BEAUTIFY                    = "Watch"
+)
+
 func (eventName GithubEvent) ToString() string {
 	switch eventName {
 	case COMMITCOMMENT:
-		return "Commit comment"
+		return COMMITCOMMENT_BEAUTIFY
 	case CREATE:
-		return "Create"
+		return CREATE_BEAUTIFY
 	case DELETE:
-		return "Delete"
+		return DELETE_BEAUTIFY
 	case FORK:
-		return "Fork"
+		return FORK_BEAUTIFY
 	case GOLLUM:
-		return "Gollum"
+		return GOLLUM_BEAUTIFY
 	case ISSUECOMMENT:
-		return "Issue comment"
+		return ISSUECOMMENT_BEAUTIFY
 	case ISSUES:
-		return "Issues"
+		return ISSUES_BEAUTIFY
 	case MEMBER:
-		return "Member"
+		return MEMBER_BEAUTIFY
 	case PUBLIC:
-		return "Public"
+		return PUBLIC_BEAUTIFY
 	case PULLREQUEST:
-		return "Pull request"
+		return PULLREQUEST_BEAUTIFY
 	case PULLREQUESTREVIEW:
-		return "Pull request review"
+		return PULLREQUESTREVIEW_BEAUTIFY
 	case PULLREQUESTREVIEWCOMMENT:
-		return "Pull request review comment"
+		return PULLREQUESTREVIEWCOMMENT_BEAUTIFY
 	case PULLREQUESTREVIEWTHREAD:
-		return "Pull request review thread"
+		return PULLREQUESTREVIEWTHREAD_BEAUTIFY
 	case PUSH:
-		return "Push"
+		return PUSH_BEAUTIFY
 	case RELEASE:
-		return "Release"
+		return RELEASE_BEAUTIFY
 	case SPONSORSHIP:
-		return "Sponsorship"
+		return SPONSORSHIP_BEAUTIFY
 	case WATCH:
-		return "Watch"
+		return WATCH_BEAUTIFY
 	}
 	return ""
 }
