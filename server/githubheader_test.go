@@ -1,24 +1,14 @@
 package server
 
 import (
-	"net/http"
 	"testing"
+	"tests/request"
 )
-
-func httpRequestEmpty() *http.Request {
-	req, _ := http.NewRequest(http.MethodPost, "/data", nil)
-	return req
-}
-
-func httpRequestWithContentTypeApplicationJson() *http.Request {
-	req := httpRequestEmpty()
-	req.Header.Add("Content-Type", "application/json")
-	return req
-}
 
 func TestGithubHeader_Init(t *testing.T) {
 	var gitH = &GithubHeader{}
-	emptyReq := httpRequestEmpty()
+	reqDir := request.RequestDirector{RequestBuilder: &request.RequestEmpty{}}
+	emptyReq := reqDir.MakeRequest()
 
 	gitH.Init(emptyReq)
 	req := GithubHeader_Export_httpRequest(gitH)
@@ -38,8 +28,10 @@ func testPrivateField(t *testing.T, methodOutput string) {
 
 func TestGithubHeader_isContentTypeApplicationJson(t *testing.T) {
 	var gitH = &GithubHeader{}
-	emptyReq := httpRequestEmpty()
-	jsonReq := httpRequestWithContentTypeApplicationJson()
+	reqDir := request.RequestDirector{RequestBuilder: &request.RequestEmpty{}}
+	emptyReq := reqDir.MakeRequest()
+	reqDir.ChangeBuilder(&request.RequestEmptyJson{})
+	jsonReq := reqDir.MakeRequest()
 
 	gitH.Init(emptyReq)
 	if GithubHeader_Export_IsContentTypeApplicationJson(gitH) {
