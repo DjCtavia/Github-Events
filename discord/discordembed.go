@@ -1,5 +1,6 @@
 package discord
 
+// https://discord.com/developers/docs/resources/channel#embed-object
 type DiscordEmbed struct {
 	Title       string         `json:"title,omitempty"`
 	Type        string         `json:"type,omitempty"`

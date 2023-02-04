@@ -2,6 +2,7 @@ package discord
 
 type NotImplemented string
 
+// https://discord.com/developers/docs/resources/channel#embed-object
 type DiscordMessage struct {
 	Content          string         `json:"content,omitempty"`
 	Nonce            int            `json:"nonce,omitempty"`
