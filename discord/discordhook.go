@@ -10,6 +10,7 @@ type DiscordHook struct {
 	Url string
 }
 
+// https://discord.com/developers/docs/resources/channel#create-message
 func (dh *DiscordHook) SendMessage(message DiscordMessage) error {
 	messageJSON, err := dh.convertMessageToJSON(message)
 	if err != nil {
@@ -23,7 +24,7 @@ func (dh *DiscordHook) SendMessage(message DiscordMessage) error {
 		return err
 	}
 	defer res.Body.Close()
-	if res.StatusCode != http.StatusOK {
+	if dh.isNotValidStatusCode(res) {
 		return CreateDiscordError(res)
 	}
 	return nil
@@ -44,4 +45,12 @@ func (dh *DiscordHook) createRequest(jsonByteData []byte) (*http.Request, error)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	return req, nil
+}
+
+func (dh *DiscordHook) isValidStatusCode(res *http.Response) bool {
+	return res.StatusCode == http.StatusOK || res.StatusCode == http.StatusNoContent
+}
+
+func (dh *DiscordHook) isNotValidStatusCode(res *http.Response) bool {
+	return dh.isValidStatusCode(res) == false
 }
