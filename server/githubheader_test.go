@@ -6,18 +6,16 @@ import (
 )
 
 func TestGithubHeader_Init(t *testing.T) {
-	var gitH = &GithubHeader{}
+	var gitH *GithubHeader
 	reqDir := request.RequestDirector{RequestBuilder: &request.RequestEmpty{}}
 	emptyReq := reqDir.MakeRequest()
 
-	gitH.Init(emptyReq)
+	gitH = NewGithubHeader(emptyReq)
 	req := GithubHeader_Export_httpRequest(gitH)
 	if emptyReq != req {
 		t.Errorf(`Expected "%p" got "%p"`, emptyReq, req)
 	}
-	testPrivateField(t, string(GithubHeader_Export_event(gitH)))
 	testPrivateField(t, GithubHeader_Export_hubSignatureSecret(gitH))
-	testPrivateField(t, GithubHeader_Export_hubSignatureSecret256(gitH))
 }
 
 func testPrivateField(t *testing.T, methodOutput string) {
@@ -27,17 +25,17 @@ func testPrivateField(t *testing.T, methodOutput string) {
 }
 
 func TestGithubHeader_isContentTypeApplicationJson(t *testing.T) {
-	var gitH = &GithubHeader{}
+	var gitH *GithubHeader
 	reqDir := request.RequestDirector{RequestBuilder: &request.RequestEmpty{}}
 	emptyReq := reqDir.MakeRequest()
 	reqDir.ChangeBuilder(&request.RequestEmptyJson{})
 	jsonReq := reqDir.MakeRequest()
 
-	gitH.Init(emptyReq)
+	gitH = NewGithubHeader(emptyReq)
 	if GithubHeader_Export_IsContentTypeApplicationJson(gitH) {
 		t.Error(`Expected false got true`)
 	}
-	gitH.Init(jsonReq)
+	gitH = NewGithubHeader(jsonReq)
 	if GithubHeader_Export_IsContentTypeApplicationJson(gitH) == false {
 		t.Error(`Expected true got false`)
 	}

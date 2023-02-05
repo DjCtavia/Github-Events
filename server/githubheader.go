@@ -5,14 +5,15 @@ import (
 )
 
 type GithubHeader struct {
-	SecretToken        string
 	httpRequest        *http.Request
 	hubSignatureSecret string
 }
 
-func (gitH *GithubHeader) Init(req *http.Request) {
+func NewGithubHeader(req *http.Request) *GithubHeader {
+	gitH := &GithubHeader{}
 	gitH.httpRequest = req
 	gitH.hubSignatureSecret = req.Header.Get("X-Hub-Signature")
+	return gitH
 }
 
 func (gitH *GithubHeader) IsValidHeader() bool {

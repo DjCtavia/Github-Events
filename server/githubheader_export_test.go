@@ -6,16 +6,8 @@ var GithubHeader_Export_httpRequest = func(header *GithubHeader) *http.Request {
 	return header.httpRequest
 }
 
-var GithubHeader_Export_event = func(header *GithubHeader) GithubEventString {
-	return header.event
-}
-
 var GithubHeader_Export_hubSignatureSecret = func(header *GithubHeader) string {
 	return header.hubSignatureSecret
-}
-
-var GithubHeader_Export_hubSignatureSecret256 = func(header *GithubHeader) string {
-	return header.hubSignatureSecret256
 }
 
 // methods
