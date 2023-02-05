@@ -12,7 +12,7 @@ type GithubHeader struct {
 func NewGithubHeader(req *http.Request) *GithubHeader {
 	gitH := &GithubHeader{}
 	gitH.httpRequest = req
-	gitH.hubSignatureSecret = req.Header.Get("X-Hub-Signature")
+	gitH.hubSignatureSecret = req.Header.Get("X-Hub-Signature-256")
 	return gitH
 }
 
