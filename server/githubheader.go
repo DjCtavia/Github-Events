@@ -4,7 +4,7 @@ import "net/http"
 
 type GithubHeader struct {
 	httpRequest           *http.Request
-	event                 GithubEvent
+	event                 GithubEventString
 	hubSignatureSecret    string
 	hubSignatureSecret256 string
 }
@@ -13,7 +13,7 @@ func (gitH *GithubHeader) Init(req *http.Request) {
 	gitH.httpRequest = req
 	gitH.hubSignatureSecret = req.Header.Get("X-Hub-Signature")
 	gitH.hubSignatureSecret = req.Header.Get("X-Hub-Signature-256")
-	gitH.event = GithubEvent(req.Header.Get("X-GitHub-Event"))
+	gitH.event = GithubEventString(req.Header.Get("X-GitHub-Event"))
 }
 
 func (gitH *GithubHeader) IsValidHeader() bool {
@@ -35,6 +35,6 @@ func (gitH *GithubHeader) isNotContentTypeApplicationJson() bool {
 	return !gitH.isContentTypeApplicationJson()
 }
 
-func (gitH *GithubHeader) GetEvent() GithubEvent {
+func (gitH *GithubHeader) GetEvent() GithubEventString {
 	return gitH.event
 }

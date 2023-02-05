@@ -2,13 +2,13 @@ package server
 
 import "testing"
 
-func TestGithubEvent_ToString(t *testing.T) {
-	githubEvent_ToString_WrongEvent(t)
-	testGithubEvent_ToString_CommitCommentToString(t)
+func TestGithubEventString_ToString(t *testing.T) {
+	githubEventString_ToString_WrongEvent(t)
+	testGithubEventString_ToString_CommitCommentToString(t)
 }
 
-func githubEvent_ToString_WrongEvent(t *testing.T) {
-	var event = GithubEvent("test")
+func githubEventString_ToString_WrongEvent(t *testing.T) {
+	var event = GithubEventString("test")
 	var convertedEventToString = event.ToString()
 
 	if convertedEventToString != "" {
@@ -16,8 +16,8 @@ func githubEvent_ToString_WrongEvent(t *testing.T) {
 	}
 }
 
-func testGithubEvent_ToString_CommitCommentToString(t *testing.T) {
-	var event = GithubEvent(COMMITCOMMENT)
+func testGithubEventString_ToString_CommitCommentToString(t *testing.T) {
+	var event = GithubEventString(COMMITCOMMENT)
 	var convertedEventToString = event.ToString()
 
 	if convertedEventToString != COMMITCOMMENT_BEAUTIFY {

@@ -6,7 +6,7 @@ var GithubHeader_Export_httpRequest = func(header *GithubHeader) *http.Request {
 	return header.httpRequest
 }
 
-var GithubHeader_Export_event = func(header *GithubHeader) GithubEvent {
+var GithubHeader_Export_event = func(header *GithubHeader) GithubEventString {
 	return header.event
 }
 
