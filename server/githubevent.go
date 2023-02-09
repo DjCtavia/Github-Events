@@ -11,4 +11,9 @@ type GitHubEvent struct {
 		Login string `json:"login"`
 		URL   string `json:"html_url"`
 	} `json:"sender"`
+	Commit struct {
+		Sha     string `json:"sha"`
+		Message string `json:"message"`
+		Url     string `json:"url"`
+	} `json:"commit"`
 }
