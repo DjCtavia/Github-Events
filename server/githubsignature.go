@@ -7,6 +7,8 @@ import (
 	"fmt"
 )
 
+const DEFAULTSIGNATURE = "secret-token"
+
 type GithubSignature struct {
 	SecretToken string
 }

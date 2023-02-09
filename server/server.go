@@ -1,15 +1,22 @@
 package server
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
 
-const DefaultServerPort = 8080
+const DEFAULTSERVERPORT = 8080
 
 type Server struct {
 	Port int
+}
+
+func NewServer(port int) *Server {
+	return &Server{Port: port}
 }
 
 func (serv Server) SetPort(port int) {
@@ -18,37 +25,40 @@ func (serv Server) SetPort(port int) {
 
 func (serv Server) RunServer() {
 	fmt.Printf("Server is Running on Port %d.\n", serv.Port)
+
 	http.HandleFunc("/data", DataHandler)
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serv.Port), nil))
 }
 
 func DataHandler(res http.ResponseWriter, req *http.Request) {
-	if isNotRequestPostMethod(req) {
-		fmt.Fprintf(res, "Bad method")
+	defer req.Body.Close()
+	if req.Method != http.MethodPost {
+		http.Error(res, "Bad method", http.StatusMethodNotAllowed)
 		return
 	}
-	if req == nil {
-		fmt.Fprintf(res, "Req is empty")
-	}
-	headerHandler := GithubHeader{}
-	headerHandler.Init(req)
 
+	headerHandler := NewGithubHeader(req)
 	if headerHandler.IsValidHeader() == false {
-		fmt.Fprintf(res, "Bad headers")
+		http.Error(res, "Bad headers", http.StatusBadRequest)
 		return
 	}
 
-	_, err := res.Write([]byte{})
+	body, err := io.ReadAll(req.Body)
 	if err != nil {
-		log.Fatalf("Error when writing bytes: %v", err)
+		http.Error(res, "Server error", http.StatusInternalServerError)
+		return
 	}
-	fmt.Fprintf(res, "Good method")
-}
 
-func IsRequestPostMethod(req *http.Request) bool {
-	return req.Method == http.MethodPost
-}
+	gitSignature := GithubSignature{DEFAULTSIGNATURE}
+	if gitSignature.Verify(body, headerHandler.GetSignatureHeader()) != nil {
+		http.Error(res, "Signature not matching", http.StatusUnauthorized)
+		return
+	}
 
-func isNotRequestPostMethod(req *http.Request) bool {
-	return !IsRequestPostMethod(req)
+	var event GitHubEvent
+	err = json.NewDecoder(bytes.NewReader(body)).Decode(&event)
+	if err != nil {
+		fmt.Fprintf(res, "%s", err)
+	}
 }
