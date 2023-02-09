@@ -3,5 +3,7 @@ go 1.19
 use (
 	.
 	./server
+	./discord
 	./tests
+	./observer
 )
