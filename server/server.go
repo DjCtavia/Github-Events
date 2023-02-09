@@ -59,6 +59,7 @@ func DataHandler(res http.ResponseWriter, req *http.Request) {
 	var event GitHubEvent
 	err = json.NewDecoder(bytes.NewReader(body)).Decode(&event)
 	if err != nil {
-		fmt.Fprintf(res, "%s", err)
+		http.Error(res, "Server error", http.StatusInternalServerError)
+		return
 	}
 }

@@ -7,6 +7,6 @@ import (
 
 func main() {
 	fmt.Println("GithubEvents Started.")
-	serv := server.Server{Port: server.DefaultServerPort}
+	serv := server.Server{Port: server.DEFAULTSERVERPORT}
 	serv.RunServer()
 }
