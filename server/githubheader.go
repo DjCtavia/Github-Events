@@ -17,7 +17,7 @@ func NewGithubHeader(req *http.Request) *GithubHeader {
 }
 
 func (gitH *GithubHeader) IsValidHeader() bool {
-	if gitH.isNotContentTypeApplicationJson() {
+	if gitH.isNotContentTypeApplicationJson() && gitH.isNotContentTypeFormURLEnconded() {
 		return false
 	}
 	if gitH.hubSignatureSecret == "" {
@@ -36,6 +36,18 @@ func (gitH *GithubHeader) isContentTypeApplicationJson() bool {
 
 func (gitH *GithubHeader) isNotContentTypeApplicationJson() bool {
 	return !gitH.isContentTypeApplicationJson()
+}
+
+func (gitH *GithubHeader) isContentTypeFormURLEnconded() bool {
+	contentType := gitH.httpRequest.Header.Get("Content-Type")
+	if contentType == "application/x-www-form-urlencoded" {
+		return true
+	}
+	return false
+}
+
+func (gitH *GithubHeader) isNotContentTypeFormURLEnconded() bool {
+	return !gitH.isContentTypeFormURLEnconded()
 }
 
 func (gitH *GithubHeader) GetSignatureHeader() string {
