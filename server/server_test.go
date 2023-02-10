@@ -1,9 +1,6 @@
 package server
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/hex"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -57,7 +54,7 @@ var dataHandlerTests = []dataHandlerTestsStruct{
 		http.MethodPost,
 		[]headerTest{
 			{"Content-Type", "application/json"},
-			{"X-Hub-Signature-256", "sha256=7b7d8759ecadd90d4ff0f0fa1ae3f59105c13b4a56e7ca3ae970580a56a70ca39dc7"},
+			{"X-Hub-Signature-256", "sha256=9fb90896e56bbfe95fa925eb1ef4e7228d7a3d415f54a2dde5aa35ee118e2b8f"},
 		},
 		strings.NewReader("{}"),
 	},
@@ -104,7 +101,7 @@ func testDataHandler_WithCommitPayload(t *testing.T) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Hub-Signature-256", "sha256="+hex.EncodeToString(hmac.New(sha256.New, []byte(DEFAULTSIGNATURE)).Sum([]byte(COMMITOBJECT))))
+	req.Header.Set("X-Hub-Signature-256", "sha256=32b658bc7e95705cedb3c5ac88d8beda18ac6c4705c1e28d96d16105bc6c42d3")
 	res, err := client.Do(req)
 	if err != nil {
 		t.Error(err)
