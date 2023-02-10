@@ -14,9 +14,16 @@ type GithubSignature struct {
 }
 
 func (ghSignature *GithubSignature) Verify(body []byte, signature string) error {
-	expectedSignature := "sha256=" + hex.EncodeToString(hmac.New(sha256.New, []byte(ghSignature.SecretToken)).Sum(body))
-	if !hmac.Equal([]byte(expectedSignature), []byte(signature)) {
-		return fmt.Errorf("Signature don't match")
+	signatureBytes, err := hex.DecodeString(signature)
+	if err != nil {
+		return fmt.Errorf("failed to decode signature: %s", err)
+	}
+
+	h := hmac.New(sha256.New, []byte(ghSignature.SecretToken))
+	_, _ = h.Write(body)
+
+	if !hmac.Equal(signatureBytes, h.Sum(nil)) {
+		return fmt.Errorf("signature don't match")
 	}
 	return nil
 }
