@@ -11,19 +11,31 @@ import (
 
 const DEFAULTSERVERPORT = 8080
 
+type HandleNotifyFunc func(event *GithubEvent)
+
 type Server struct {
-	Port int
+	Port         int
+	HandleNotify HandleNotifyFunc
 }
 
-func NewServer(port int) *Server {
-	return &Server{Port: port}
+var GServer *Server
+
+func GetServer() *Server {
+	if GServer == nil {
+		GServer = &Server{Port: DEFAULTSERVERPORT}
+	}
+	return GServer
 }
 
-func (serv Server) SetPort(port int) {
+func (serv *Server) BindPort(port int) {
 	serv.Port = port
 }
 
-func (serv Server) RunServer() {
+func (serv *Server) BindNotifyFunc(notifyFunc HandleNotifyFunc) {
+	serv.HandleNotify = notifyFunc
+}
+
+func (serv *Server) RunServer() {
 	fmt.Printf("Server is Running on Port %d.\n", serv.Port)
 
 	http.HandleFunc("/data", DataHandler)
@@ -51,15 +63,19 @@ func DataHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	gitSignature := GithubSignature{DEFAULTSIGNATURE}
-	if gitSignature.Verify(body, headerHandler.GetSignatureHeader()) != nil {
+	if gitSignature.Verify(body, headerHandler.GetSignatureHeader()[7:]) != nil {
 		http.Error(res, "Signature not matching", http.StatusUnauthorized)
 		return
 	}
 
-	var event GitHubEvent
+	var event GithubEvent
 	err = json.NewDecoder(bytes.NewReader(body)).Decode(&event)
 	if err != nil {
 		http.Error(res, "Server error", http.StatusInternalServerError)
 		return
+	}
+
+	if GetServer().HandleNotify != nil {
+		GetServer().HandleNotify(&event)
 	}
 }
