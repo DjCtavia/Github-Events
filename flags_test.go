@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestGithubEventString_ToString(t *testing.T) {
+func TestHookURLFlag_Set(t *testing.T) {
 	hookFlag := &hookURLFlag{}
 	hookFlag.Set("invalid")
 
