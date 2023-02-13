@@ -1,6 +1,7 @@
 package main
 
 import (
+	discord "Discord"
 	"djctavia/server"
 	"flag"
 	"fmt"
@@ -19,8 +20,7 @@ func main() {
 	flag.Parse()
 	isHelpFlagPresent(helpFlag)
 
-	// Example
-	// observer.GlobalSubject.Register(&observer.GithubObserver{Id: "Main Discord Server", Hook: &discord.DiscordHook{Url: "https://discord.com/api/webhooks/7777777777777777777/abcdefg_abcd_abcdefg012345-abcedfg124567987a_bcedf_abcedf01234456789"}})
+	registerHooks(&hooksFlag)
 
 	serv := server.GetServer()
 	serv.BindPort(*runningPortFlag)
@@ -37,5 +37,19 @@ func isHelpFlagPresent(helpFlagEnabled *bool) {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
 		flag.PrintDefaults()
 		os.Exit(0)
+	}
+}
+
+func registerHooks(hooksFlag *hookURLFlag) {
+	ArrayOfDataHook, err := hooksFlag.GetArrayOfDataHook()
+	if err != nil {
+		os.Exit(64)
+	}
+	if len(ArrayOfDataHook) == 0 {
+		fmt.Fprintf(os.Stderr, "Add more hooks with command -hookUrl, type -help for more details")
+		os.Exit(64)
+	}
+	for _, hook := range ArrayOfDataHook {
+		observer.GlobalSubject.Register(&observer.GithubObserver{Id: hook.ID, Hook: &discord.DiscordHook{Url: hook.hookURL}})
 	}
 }
