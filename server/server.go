@@ -38,7 +38,7 @@ func (serv *Server) BindNotifyFunc(notifyFunc HandleNotifyFunc) {
 func (serv *Server) RunServer() {
 	fmt.Printf("Server is Running on Port %d.\n", serv.Port)
 
-	http.HandleFunc("/data", DataHandler)
+	http.HandleFunc("/", DataHandler)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serv.Port), nil))
 }
