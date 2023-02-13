@@ -15,7 +15,7 @@ func main() {
 	var hooksFlag hookURLFlag
 	flag.Var(&hooksFlag, "hookUrl", "add a discord hook to attach: uniqueID@hookURL")
 	helpFlag := flag.Bool("help", false, "show help")
-	runningPortFlag := flag.Int("server port", server.DEFAULTSERVERPORT, "server port for receiving github events")
+	runningPortFlag := flag.Int("serverPort", server.DEFAULTSERVERPORT, "server port for receiving github events")
 
 	flag.Parse()
 	isHelpFlagPresent(helpFlag)
